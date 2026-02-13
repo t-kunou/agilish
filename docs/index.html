@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGILISH - アジャイル百人一首</title>
+    <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+    <!-- スタート画面 -->
+    <div id="start-screen" class="screen">
+        <div class="container">
+            <h1 class="title">AGILISH</h1>
+            <p class="subtitle">アジャイル百人一首</p>
+
+            <div class="difficulty-section">
+                <h2>難易度を選択</h2>
+                <div class="difficulty-options">
+                    <label class="difficulty-option">
+                        <input type="radio" name="difficulty" value="easy" checked>
+                        <div class="difficulty-card">
+                            <span class="difficulty-name">EASY</span>
+                            <span class="difficulty-desc">10枚・制限時間なし・ゆっくり</span>
+                            <span class="difficulty-life">&#9829; 無限</span>
+                        </div>
+                    </label>
+                    <label class="difficulty-option">
+                        <input type="radio" name="difficulty" value="normal">
+                        <div class="difficulty-card">
+                            <span class="difficulty-name">NORMAL</span>
+                            <span class="difficulty-desc">20枚・1問30秒</span>
+                            <span class="difficulty-life">&#9829; ×10</span>
+                        </div>
+                    </label>
+                    <label class="difficulty-option">
+                        <input type="radio" name="difficulty" value="hard">
+                        <div class="difficulty-card">
+                            <span class="difficulty-name">HARD</span>
+                            <span class="difficulty-desc">30枚・1問15秒・少し早口</span>
+                            <span class="difficulty-life">&#9829; ×5</span>
+                        </div>
+                    </label>
+                    <label class="difficulty-option">
+                        <input type="radio" name="difficulty" value="inferno">
+                        <div class="difficulty-card">
+                            <span class="difficulty-name">INFERNO</span>
+                            <span class="difficulty-desc">40枚・1問12秒・早口</span>
+                            <span class="difficulty-life">&#9829; ×3</span>
+                        </div>
+                    </label>
+                    <label class="difficulty-option">
+                        <input type="radio" name="difficulty" value="nightmare">
+                        <div class="difficulty-card">
+                            <span class="difficulty-name">NIGHTMARE</span>
+                            <span class="difficulty-desc">全枚・1問10秒・超早口</span>
+                            <span class="difficulty-life">&#9829; ×1</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="options-section">
+                <label class="option-checkbox">
+                    <input type="checkbox" id="show-text-option" checked>
+                    <span>読み上げ中のテキストを表示する</span>
+                </label>
+            </div>
+
+            <button id="start-btn" class="btn btn-primary">はじめる</button>
+        </div>
+    </div>
+
+    <!-- ゲーム画面 -->
+    <div id="game-screen" class="screen hidden">
+        <div class="game-header">
+            <div id="lives-area" class="lives-area"></div>
+            <div class="game-info">
+                <div class="info-item">
+                    <span class="info-label">スコア</span>
+                    <span id="score" class="info-value">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">残り</span>
+                    <span id="remaining" class="info-value">0</span>
+                </div>
+                <div class="info-item" id="timer-container">
+                    <span class="info-label">時間</span>
+                    <span id="timer" class="info-value">--</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="reading-area">
+            <div id="reading-text" class="reading-text"></div>
+            <button id="replay-btn" class="btn btn-secondary">もう一度読み上げ</button>
+        </div>
+
+        <div id="cards-area" class="cards-area">
+            <!-- カードがここに動的に生成される -->
+        </div>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="result-screen" class="screen hidden">
+        <div class="container result-container">
+            <div class="result-left">
+                <h1 class="result-title">結果発表</h1>
+
+                <div class="result-card">
+                    <div class="result-item">
+                        <span class="result-label">最終スコア</span>
+                        <span id="final-score" class="result-value">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">正答率</span>
+                        <span id="accuracy" class="result-value">0%</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">かかった時間</span>
+                        <span id="total-time" class="result-value">0秒</span>
+                    </div>
+                </div>
+
+                <div class="result-message" id="result-message"></div>
+
+                <button id="retry-btn" class="btn btn-primary">もう一度プレイ</button>
+            </div>
+            <div class="result-right">
+                <div id="missed-list" class="missed-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 効果音用（視覚エフェクトで代用） -->
+    <div id="effect-overlay" class="effect-overlay hidden"></div>
+
+    <!-- カウントダウンオーバーレイ -->
+    <div id="countdown-overlay" class="countdown-overlay hidden">
+        <div class="countdown-number" id="countdown-number">3</div>
+    </div>
+
+    <script src="game.js?v=3"></script>
+</body>
+</html>
