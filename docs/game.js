@@ -740,9 +740,97 @@ class AgilishGame {
         // ミスした札の一覧表示
         this.renderMissedList();
 
+        // 結果音
+        const isCleared = this.currentIndex >= this.selectedPractices.length;
+        if (isCleared) {
+            this.playFanfare();
+        } else {
+            this.playGameOverSound();
+        }
+
         // 画面切り替え
         this.gameScreen.classList.add('hidden');
         this.resultScreen.classList.remove('hidden');
+    }
+
+    playFanfare() {
+        try {
+            if (!this.audioContext) return;
+            const ctx = this.audioContext;
+            const now = ctx.currentTime;
+
+            const notes = [523, 659, 784, 1047];
+            notes.forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(freq, now);
+                gain.gain.setValueAtTime(0, now + i * 0.15);
+                gain.gain.linearRampToValueAtTime(0.15, now + i * 0.15 + 0.02);
+                gain.gain.linearRampToValueAtTime(0.1, now + i * 0.15 + 0.12);
+                gain.gain.linearRampToValueAtTime(0, now + i * 0.15 + 0.4);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + i * 0.15);
+                osc.stop(now + i * 0.15 + 0.4);
+            });
+
+            // 最後の和音
+            const chord = [1047, 1319, 1568];
+            chord.forEach(freq => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(freq, now);
+                gain.gain.setValueAtTime(0, now + 0.6);
+                gain.gain.linearRampToValueAtTime(0.12, now + 0.65);
+                gain.gain.linearRampToValueAtTime(0, now + 1.5);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + 0.6);
+                osc.stop(now + 1.5);
+            });
+        } catch (e) {
+            console.error('ファンファーレ再生エラー:', e);
+        }
+    }
+
+    playGameOverSound() {
+        try {
+            if (!this.audioContext) return;
+            const ctx = this.audioContext;
+            const now = ctx.currentTime;
+
+            const notes = [440, 415, 370, 311];
+            notes.forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + i * 0.3);
+                gain.gain.setValueAtTime(0, now + i * 0.3);
+                gain.gain.linearRampToValueAtTime(0.2, now + i * 0.3 + 0.02);
+                gain.gain.linearRampToValueAtTime(0, now + i * 0.3 + 0.3);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + i * 0.3);
+                osc.stop(now + i * 0.3 + 0.3);
+            });
+
+            // 低い持続音
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(147, now + 1.2);
+            gain.gain.setValueAtTime(0, now + 1.2);
+            gain.gain.linearRampToValueAtTime(0.2, now + 1.25);
+            gain.gain.linearRampToValueAtTime(0, now + 2.2);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + 1.2);
+            osc.stop(now + 2.2);
+        } catch (e) {
+            console.error('ゲームオーバー音再生エラー:', e);
+        }
     }
 
     renderMissedList() {
